@@ -6,6 +6,7 @@ import urllib
 import zipfile
 from cStringIO import StringIO
 from lxml import etree, html
+from PIL import Image
 
 dirname = os.path.dirname(__file__)
 
@@ -14,7 +15,7 @@ def get_images(doc):
     for img in doc.xpath('//img'):
         url = img.get('src')
         image = urllib.urlopen(url)
-        images.append((url, image))
+        images.append((url, StringIO(image.read())))
     return images
     
 
@@ -38,6 +39,22 @@ def transform(htmlfile, xslfile):
         url, data = img
         # insert image before document
         namelist.insert(docindex, 'word/media/image%s' % count)
+
+        # insert image sizes in the wordml
+        img = Image.open(data)
+        width, height = img.size
+
+        # conver to a pixel and then to 20ths of a point
+        width = str(int((width * 72.0 / 96.0) * 20))
+        height = str(int((height * 72.0 / 96.0) * 20))
+
+        widthattr = '%s-$width' % url
+        heightattr = '%s-$height' % url
+        wordml = wordml.replace(widthattr, width)
+        wordml = wordml.replace(heightattr, width)
+
+    print wordml
+
     for filename in namelist:
         if filename == 'word/document.xml':
             zf.writestr('word/document.xml', wordml)
@@ -53,7 +70,7 @@ def transform(htmlfile, xslfile):
     template.close()
     zf.close()
     zipcontent = output.getvalue()
-    sys.stdout.write(zipcontent)
+    # sys.stdout.write(zipcontent)
 
 def main():
     htmlfilename = sys.argv[1]
