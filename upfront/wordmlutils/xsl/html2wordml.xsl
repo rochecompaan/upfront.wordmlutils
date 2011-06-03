@@ -249,7 +249,16 @@
                 <w:drawing>
                     <wp:inline>
                         <!-- width and height will be computed and transformed in python -->
-                        <wp:extent cx="$width" cy="$height" />
+                        <wp:extent>
+                            <xsl:attribute name="width">
+                                <xsl:value-of select="./@src" />
+                                <xsl:text>-$width</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="height">
+                                <xsl:value-of select="./@src" />
+                                <xsl:text>-$width</xsl:text>
+                            </xsl:attribute>
+                        </wp:extent>
                         <wp:docPr>
                             <xsl:attribute name="name">
                                 <xsl:value-of select="./@src" />
@@ -281,7 +290,16 @@
                             <pic:spPr>
                                 <a:xfrm>
                                 <a:off x="0" y="0" />
-                                <a:ext cx="$width" cy="$height" />
+                                <a:ext>
+                                    <xsl:attribute name="cx">
+                                        <xsl:value-of select="./@src" />
+                                        <xsl:text>-$width</xsl:text>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="cy">
+                                        <xsl:value-of select="./@src" />
+                                        <xsl:text>-$width</xsl:text>
+                                    </xsl:attribute>
+                                </a:ext>
                                 </a:xfrm>
                                 <a:prstGeom prst="rect" />
                             </pic:spPr>
