@@ -282,7 +282,6 @@
                                 <pic:cNvPicPr />
                             </pic:nvPicPr>
                             <pic:blipFill>
-                                <a:blip r:embed="R564dd6f276f347c3" />
                                 <a:blip>
                                     <xsl:attribute name="r:embed">
                                         <xsl:value-of select="./@src" />
