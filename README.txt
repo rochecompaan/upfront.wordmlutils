@@ -1,6 +1,6 @@
 Introduction
 ============
 
+A set of utilities to convert to transform to and from WordML.
 
-
-This product may contain traces of nuts.
+An HTML to WordML transform is the only transform currently available.
