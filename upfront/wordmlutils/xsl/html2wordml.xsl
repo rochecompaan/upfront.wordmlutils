@@ -250,13 +250,13 @@
                     <wp:inline>
                         <!-- width and height will be computed and transformed in python -->
                         <wp:extent>
-                            <xsl:attribute name="width">
+                            <xsl:attribute name="cx">
                                 <xsl:value-of select="./@src" />
                                 <xsl:text>-$width</xsl:text>
                             </xsl:attribute>
-                            <xsl:attribute name="height">
+                            <xsl:attribute name="cy">
                                 <xsl:value-of select="./@src" />
-                                <xsl:text>-$width</xsl:text>
+                                <xsl:text>-$height</xsl:text>
                             </xsl:attribute>
                         </wp:extent>
                         <wp:docPr>
@@ -283,23 +283,29 @@
                             </pic:nvPicPr>
                             <pic:blipFill>
                                 <a:blip r:embed="R564dd6f276f347c3" />
+                                <a:blip>
+                                    <xsl:attribute name="r:embed">
+                                        <xsl:value-of select="./@src" />
+                                        <xsl:text>-$rid</xsl:text>
+                                    </xsl:attribute>
+                                </a:blip>
                                 <a:stretch>
                                 <a:fillRect />
                                 </a:stretch>
                             </pic:blipFill>
                             <pic:spPr>
                                 <a:xfrm>
-                                <a:off x="0" y="0" />
-                                <a:ext>
-                                    <xsl:attribute name="cx">
-                                        <xsl:value-of select="./@src" />
-                                        <xsl:text>-$width</xsl:text>
-                                    </xsl:attribute>
-                                    <xsl:attribute name="cy">
-                                        <xsl:value-of select="./@src" />
-                                        <xsl:text>-$width</xsl:text>
-                                    </xsl:attribute>
-                                </a:ext>
+                                    <a:off x="0" y="0" />
+                                    <a:ext>
+                                        <xsl:attribute name="cx">
+                                            <xsl:value-of select="./@src" />
+                                            <xsl:text>-$width</xsl:text>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="cy">
+                                            <xsl:value-of select="./@src" />
+                                            <xsl:text>-$height</xsl:text>
+                                        </xsl:attribute>
+                                    </a:ext>
                                 </a:xfrm>
                                 <a:prstGeom prst="rect" />
                             </pic:spPr>
