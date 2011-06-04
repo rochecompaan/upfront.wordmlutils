@@ -50,8 +50,10 @@ def transform(htmlfile, xslfile):
 
         widthattr = '%s-$width' % url
         heightattr = '%s-$height' % url
+        ridattr = '%s-%rid' % url
         wordml = wordml.replace(widthattr, width)
         wordml = wordml.replace(heightattr, width)
+        wordml = wordml.replace(ridattr, 'rImageId%s' % count)
 
     print wordml
 
