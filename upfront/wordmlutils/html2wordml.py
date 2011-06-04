@@ -18,6 +18,11 @@ def get_images(doc):
         images.append((url, StringIO(image.read())))
     return images
     
+def convertPixelsToEMU(px):
+    points = px * 72.0 / 96.0
+    inches = points / 72.0
+    emu = inches * 914400
+    return int(emu)
 
 def transform(htmlfile, xslfile):
     xslt_root = etree.XML(xslfile.read())
@@ -44,15 +49,15 @@ def transform(htmlfile, xslfile):
         img = Image.open(data)
         width, height = img.size
 
-        # conver to a pixel and then to 20ths of a point
-        width = str(int((width * 72.0 / 96.0) * 20))
-        height = str(int((height * 72.0 / 96.0) * 20))
+        # convert to EMU (English Metric Unit) 
+        width = convertPixelsToEMU(width)
+        height = convertPixelsToEMU(height)
 
         widthattr = '%s-$width' % url
         heightattr = '%s-$height' % url
-        ridattr = '%s-%rid' % url
-        wordml = wordml.replace(widthattr, width)
-        wordml = wordml.replace(heightattr, width)
+        ridattr = '%s-$rid' % url
+        wordml = wordml.replace(widthattr, str(width))
+        wordml = wordml.replace(heightattr, str(height))
         wordml = wordml.replace(ridattr, 'rImageId%s' % count)
 
     print wordml
