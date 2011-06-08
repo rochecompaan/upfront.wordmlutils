@@ -4,6 +4,7 @@ import os
 import sys
 import urllib
 import zipfile
+import argparse
 from cStringIO import StringIO
 from lxml import etree, html
 from PIL import Image
@@ -25,7 +26,7 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
-def transform(htmlfile, xslfile):
+def transform(htmlfile, xslfile, create_package=True):
     xslt_root = etree.XML(xslfile.read())
     transform = etree.XSLT(xslt_root)
     doc = html.parse(htmlfile)
@@ -71,8 +72,6 @@ def transform(htmlfile, xslfile):
 
     relsxml = etree.tostring(rels)
 
-    print wordml
-
     for filepath in namelist:
         if filepath == 'word/document.xml':
             zf.writestr(filepath, wordml)
@@ -89,18 +88,24 @@ def transform(htmlfile, xslfile):
     template.close()
     zf.close()
     zipcontent = output.getvalue()
-    # sys.stdout.write(zipcontent)
+    if create_package:
+        sys.stdout.write(zipcontent)
+    else:
+        sys.stdout.write(wordml)
 
 def main():
-    htmlfilename = sys.argv[1]
-    htmlfile = urllib.urlopen(htmlfilename)
+    parser = argparse.ArgumentParser(description='Convert HTML to WordML')
+    parser.add_argument('-p', '--create-package', action='store_true',
+        help='Create WordML package') 
+    parser.add_argument('htmlfile', help='/path/to/htmlfile') 
+    args = parser.parse_args()
+
+    htmlfile = urllib.urlopen(args.htmlfile)
+
     xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
 
-    transform(htmlfile, xslfile)
+    transform(htmlfile, xslfile, create_package=args.create_package)
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print "Usage: html2wordml.py /path/to/htmlfile"
-        sys.exit(1)
 
     main()
