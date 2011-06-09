@@ -64,11 +64,11 @@
     </xsl:template>
 
     <xsl:template match="pre" mode="ancestor_properties">
-        <w:rStyle w:val="sourcetext"/>
+        <w:rStyle w:val="SourceText"/>
     </xsl:template>
 
     <xsl:template match="div" mode="ancestor_properties">
-        <w:rStyle w:val="quotation"/>
+        <w:rStyle w:val="Quotation"/>
     </xsl:template>
 
 
@@ -93,7 +93,7 @@
     <xsl:template match="h2">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="heading2"/>
+                <w:pStyle w:val="Heading2"/>
             </w:pPr>
             <xsl:apply-templates/>
         </w:p>
@@ -102,7 +102,7 @@
     <xsl:template match="h3">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="heading3"/>
+                <w:pStyle w:val="Heading3"/>
             </w:pPr>
             <xsl:apply-templates/>
         </w:p>
@@ -135,7 +135,7 @@
     <xsl:template match="ol/li">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="textbody"/>
+                <w:pStyle w:val="Textbody"/>
                 <w:numPr>
                     <w:ilvl w:val="0"/>
                     <w:numId w:val="4"/>
@@ -148,7 +148,7 @@
     <xsl:template match="ul/li">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="textbody"/>
+                <w:pStyle w:val="Textbody"/>
                 <w:numPr>
                     <w:ilvl w:val="0"/>
                     <w:numId w:val="5"/>
@@ -226,10 +226,10 @@
             <w:p>
                 <w:pPr>
                     <xsl:if test="name() = 'th'">
-                        <w:pStyle w:val="tableheading"/>
+                        <w:pStyle w:val="TableHeading"/>
                     </xsl:if>
                     <xsl:if test="name() = 'td'">
-                        <w:pStyle w:val="tablecontents"/>
+                        <w:pStyle w:val="TableContents"/>
                     </xsl:if>
                 </w:pPr>
                 <xsl:apply-templates />
@@ -240,7 +240,7 @@
     <xsl:template match="img">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="textbody"/>
+                <w:pStyle w:val="Textbody"/>
                 <w:jc w:val="left"/>
                 <w:spacing w:after="120" w:before="0"/>
             </w:pPr>
