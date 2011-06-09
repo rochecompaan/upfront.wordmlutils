@@ -77,8 +77,9 @@ def transform(htmlfile, xslfile, create_package=True):
             zf.writestr(filepath, wordml)
         elif filepath.startswith('word/media'):
             filename = filepath.split('/')[-1]
-            filecontent = images[filename][-1].read()
-            zf.writestr(filepath, filecontent)
+            filecontent = images[filename][-1]
+            filecontent.seek(0)
+            zf.writestr(filepath, filecontent.read())
         elif filepath.startswith('word/_rels/document.xml.rels'):
             zf.writestr(filepath, relsxml)
         else:
