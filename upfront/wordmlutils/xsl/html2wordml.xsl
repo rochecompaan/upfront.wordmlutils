@@ -267,9 +267,9 @@
                                 <xsl:value-of select="./@src" />
                             </xsl:attribute>
                         </wp:docPr>
-                        <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/3/main">
-                        <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/3/picture">
-                            <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/3/picture">
+                        <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+                        <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                            <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
                             <pic:nvPicPr>
                                 <pic:cNvPr>
                                     <xsl:attribute name="name">
