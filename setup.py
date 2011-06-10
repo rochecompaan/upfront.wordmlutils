@@ -25,7 +25,8 @@ setup(name='upfront.wordmlutils',
       install_requires=[
           'argparse',
           'PIL',
-          'lxml'
+          'lxml',
+          'BeautifulSoup',
       ],
       entry_points="""
       # -*- Entry points: -*-
