@@ -23,8 +23,9 @@ setup(name='upfront.wordmlutils',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
+          'argparse',
+          'PIL',
+          'lxml'
       ],
       entry_points="""
       # -*- Entry points: -*-
