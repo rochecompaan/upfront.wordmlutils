@@ -26,7 +26,12 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
-def transform(htmlfile, xslfile, create_package=True):
+def transform(htmlfile, create_package=True, outfile=sys.stdout):
+    """ transform html to wordml
+    """
+
+    xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
+
     xslt_root = etree.XML(xslfile.read())
     transform = etree.XSLT(xslt_root)
     doc = html.parse(htmlfile)
@@ -90,9 +95,9 @@ def transform(htmlfile, xslfile, create_package=True):
     zf.close()
     zipcontent = output.getvalue()
     if create_package:
-        sys.stdout.write(zipcontent)
+        outfile.write(zipcontent)
     else:
-        sys.stdout.write(wordml)
+        outfile.write(wordml)
 
 def main():
     parser = argparse.ArgumentParser(description='Convert HTML to WordML')
@@ -103,9 +108,7 @@ def main():
 
     htmlfile = urllib.urlopen(args.htmlfile)
 
-    xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
-
-    transform(htmlfile, xslfile, create_package=args.create_package)
+    transform(htmlfile, create_package=args.create_package)
 
 if __name__ == '__main__':
 
