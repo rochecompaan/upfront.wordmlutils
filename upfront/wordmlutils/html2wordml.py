@@ -7,15 +7,16 @@ import zipfile
 import argparse
 from cStringIO import StringIO
 from lxml import etree, html
+from lxml.html import soupparser
 from PIL import Image
 
 dirname = os.path.dirname(__file__)
 
-def get_images(doc):
+def get_images(basepath, doc):
     images = {}
     for img in doc.xpath('//img'):
         url = img.get('src')
-        image = urllib.urlopen(url)
+        image = urllib.urlopen('%s/%s' % (basepath, url))
         filename = url.split('/')[-1]
         images[filename] = (url, StringIO(image.read()))
     return images
@@ -26,7 +27,8 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
-def transform(htmlfile, create_package=True, outfile=sys.stdout):
+def transform(basepath, htmlfile, create_package=True, outfile=sys.stdout):
+
     """ transform html to wordml
     """
 
@@ -34,8 +36,9 @@ def transform(htmlfile, create_package=True, outfile=sys.stdout):
 
     xslt_root = etree.XML(xslfile.read())
     transform = etree.XSLT(xslt_root)
-    doc = html.parse(htmlfile)
-    images = get_images(doc)
+
+    doc = soupparser.fromstring(htmlfile)
+    images = get_images(basepath, doc)
     result_tree = transform(doc)
     wordml = etree.tostring(result_tree)
     wordml = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' + \
@@ -101,14 +104,17 @@ def transform(htmlfile, create_package=True, outfile=sys.stdout):
 
 def main():
     parser = argparse.ArgumentParser(description='Convert HTML to WordML')
-    parser.add_argument('-p', '--create-package', action='store_true',
+    parser.add_argument('-c', '--create-package', action='store_true',
         help='Create WordML package') 
+    parser.add_argument('-p', '--basepath', help='Base path for relative urls',
+        required=True)
     parser.add_argument('htmlfile', help='/path/to/htmlfile') 
     args = parser.parse_args()
 
     htmlfile = urllib.urlopen(args.htmlfile)
+    basepath = args.basepath
 
-    transform(htmlfile, create_package=args.create_package)
+    transform(basepath, htmlfile, create_package=args.create_package)
 
 if __name__ == '__main__':
 
