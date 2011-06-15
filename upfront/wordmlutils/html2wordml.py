@@ -27,7 +27,8 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
-def transform(basepath, htmlfile, create_package=True, outfile=sys.stdout):
+def transform(basepath, htmlfile, image_resolver=get_images,
+        create_package=True, outfile=sys.stdout):
 
     """ transform html to wordml
     """
@@ -38,7 +39,7 @@ def transform(basepath, htmlfile, create_package=True, outfile=sys.stdout):
     transform = etree.XSLT(xslt_root)
 
     doc = soupparser.fromstring(htmlfile)
-    images = get_images(basepath, doc)
+    images = image_resolver(basepath, doc)
     result_tree = transform(doc)
     wordml = etree.tostring(result_tree)
     wordml = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' + \
