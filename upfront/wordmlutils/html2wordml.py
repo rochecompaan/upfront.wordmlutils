@@ -27,10 +27,14 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
-def transform(basepath, htmlfile, image_resolver=get_images,
+def transform(basepath, htmlfile, image_resolver=None,
         create_package=True, outfile=sys.stdout):
 
     """ transform html to wordml
+        
+        image_resolver needs to be an instance of a class with a
+        get_images method accepting `basepath` and `doc` as args. it should
+        return images in the same format as the get_images method above.
     """
 
     xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
@@ -39,7 +43,10 @@ def transform(basepath, htmlfile, image_resolver=get_images,
     transform = etree.XSLT(xslt_root)
 
     doc = soupparser.fromstring(htmlfile)
-    images = image_resolver(basepath, doc)
+    if image_resolver:
+        image_resolver.get_images(basepath, doc)
+    else:
+        images = get_images(basepath, doc)
     result_tree = transform(doc)
     wordml = etree.tostring(result_tree)
     wordml = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' + \
