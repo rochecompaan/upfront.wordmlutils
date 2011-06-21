@@ -33,6 +33,11 @@
                                 concat(' ', name(), ' '))">
                 <xsl:apply-templates select="." mode="block-elements"/>
             </xsl:if>
+            <!-- handle text nodes except if they are inside body -->
+            <xsl:if test="name() = '' and not(parent::body)">
+                <xsl:apply-templates select="."/>
+            </xsl:if>
+            <!-- handle text nodes -->
         </xsl:for-each>
     </xsl:template>
 
