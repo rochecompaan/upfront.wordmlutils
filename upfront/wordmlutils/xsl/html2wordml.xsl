@@ -164,6 +164,13 @@
     </xsl:template>
 
     <xsl:template match="table" mode="block-elements">
+        <w:p>
+            <w:pPr/>
+            <w:r>
+                <w:rPr/>
+                <w:t/>
+            </w:r>
+        </w:p>
         <w:tbl>
             <w:tblPr>
                 <w:tblW w:w="0" w:type="auto"/>
