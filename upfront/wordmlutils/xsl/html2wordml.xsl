@@ -175,7 +175,7 @@
             </w:tblPr>
             <w:tblGrid>
                 <xsl:variable name="maxCells">
-                    <xsl:for-each select="*/tr">
+                    <xsl:for-each select="tr|tbody/tr|thead/tr">
                         <xsl:sort select="count(td[not(@colspan)]) + sum(td/@colspan)" order="descending"/>
                             <xsl:if test="position() = 1">
                                 <xsl:value-of select="count(td[not(@colspan)]) + sum(td/@colspan)"/>
@@ -186,7 +186,7 @@
                     <xsl:with-param name="numColumns" select="$maxCells"/>
                 </xsl:call-template>
             </w:tblGrid>
-            <xsl:for-each select="*/tr">
+            <xsl:for-each select="tr|tbody/tr|thead/tr">
                 <xsl:call-template name="tr"/>
             </xsl:for-each>
         </w:tbl>
