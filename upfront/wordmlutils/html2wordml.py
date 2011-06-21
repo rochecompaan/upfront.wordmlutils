@@ -13,14 +13,17 @@ from PIL import Image
 dirname = os.path.dirname(__file__)
 
 def get_images(basepath, doc):
-    images = {}
+    images = []
     for img in doc.xpath('//img'):
         url = img.get('src')
         image = urllib.urlopen('%s/%s' % (basepath, url))
-        filename = url.split('/')[-1]
-        images[filename] = (url, StringIO(image.read()))
+        images.append(StringIO(image.read()))
     return images
-    
+
+def normalize_image_urls(doc):
+    for count, img in enumerate(doc.xpath('//img')):
+        img.set('src', 'image%s' % count)
+
 def convertPixelsToEMU(px):
     points = px * 72.0 / 96.0
     inches = points / 72.0
@@ -44,9 +47,11 @@ def transform(basepath, htmlfile, image_resolver=None,
 
     doc = soupparser.fromstring(htmlfile)
     if image_resolver:
-        image_resolver.get_images(basepath, doc)
+        images = image_resolver.get_images(basepath, doc)
     else:
         images = get_images(basepath, doc)
+
+    normalize_image_urls(doc)
     result_tree = transform(doc)
     wordml = etree.tostring(result_tree)
     wordml = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' + \
@@ -63,28 +68,31 @@ def transform(basepath, htmlfile, image_resolver=None,
     zf = zipfile.ZipFile(output, 'w')
     namelist = template.namelist()
     docindex = namelist.index('word/document.xml')
-    for filename, img in images.items():
-        url, data = img
+    for count, img in enumerate(images):
+        filename = 'image%s' % count
         # insert image before document
         namelist.insert(docindex, 'word/media/%s' % filename)
 
         # insert image sizes in the wordml
-        img = Image.open(data)
+        img = Image.open(img)
         width, height = img.size
 
         # convert to EMU (English Metric Unit) 
         width = convertPixelsToEMU(width)
         height = convertPixelsToEMU(height)
 
-        widthattr = '%s-$width' % url
-        heightattr = '%s-$height' % url
-        ridattr = '%s-$rid' % url
+        widthattr = '%s-$width' % filename
+        heightattr = '%s-$height' % filename
+        ridattr = '%s-$rid' % filename
         wordml = wordml.replace(widthattr, str(width))
         wordml = wordml.replace(heightattr, str(height))
         wordml = wordml.replace(ridattr, filename)
         relxml = """<Relationship Id="%s" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/%s"/>""" % (
             filename, filename)
-        rels.append(etree.fromstring(relxml))
+        try:
+            rels.append(etree.fromstring(relxml))
+        except:
+            raise str(relxml)
 
     relsxml = etree.tostring(rels)
 
@@ -92,8 +100,8 @@ def transform(basepath, htmlfile, image_resolver=None,
         if filepath == 'word/document.xml':
             zf.writestr(filepath, wordml)
         elif filepath.startswith('word/media'):
-            filename = filepath.split('/')[-1]
-            filecontent = images[filename][-1]
+            index = int(filepath[-1])
+            filecontent = images[index]
             filecontent.seek(0)
             zf.writestr(filepath, filecontent.read())
         elif filepath.startswith('word/_rels/document.xml.rels'):
