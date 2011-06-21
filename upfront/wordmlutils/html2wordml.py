@@ -54,6 +54,9 @@ def transform(basepath, htmlfile, image_resolver=None,
     normalize_image_urls(doc)
     result_tree = transform(doc)
     wordml = etree.tostring(result_tree)
+
+    # XXX: Don't hardcode encoding and check if doc has xml processing
+    # instruction before adding it
     wordml = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' + \
         wordml
 
