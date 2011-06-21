@@ -99,19 +99,15 @@
         </w:p>
     </xsl:template>
 
-    <xsl:template match="h2">
+    <xsl:template match="h1|h2|h3|h4|h5|h6">
         <w:p>
             <w:pPr>
-                <w:pStyle w:val="Heading2"/>
-            </w:pPr>
-            <xsl:apply-templates/>
-        </w:p>
-    </xsl:template>
-
-    <xsl:template match="h3">
-        <w:p>
-            <w:pPr>
-                <w:pStyle w:val="Heading3"/>
+                <w:pStyle>
+                    <xsl:attribute name="w:val">
+                        <xsl:text>Heading</xsl:text>
+                        <xsl:value-of select="substring(name(), 2, 1)" />
+                    </xsl:attribute>
+                </w:pStyle>
             </w:pPr>
             <xsl:apply-templates/>
         </w:p>
