@@ -9,27 +9,31 @@
     <xsl:template match="body">
         <w:document xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
             <w:body>
-                <xsl:for-each select="node()">
-                    <xsl:variable name="preceding-element" select="local-name(preceding-sibling::*[position()=1])"/>
-                    <!-- test if we are preceded by a block element -->
-                    <xsl:if test="contains(concat(' ', $block-elements, ' '),
-                                        concat(' ', $preceding-element, ' '))">
-                        <xsl:if test="contains(concat(' ', $inline-elements, ' '),
-                                            concat(' ', name(), ' ')) or
-                                    name()='' and normalize-space(.) != ''">
-                            <w:p>
-                                <w:pPr/>
-                                <xsl:apply-templates select="." mode="group-inline-siblings"/>
-                            </w:p>
-                        </xsl:if>
-                    </xsl:if>
-                    <xsl:if test="contains(concat(' ', $block-elements, ' '),
-                                        concat(' ', name(), ' '))">
-                        <xsl:apply-templates select="." mode="block-elements"/>
-                    </xsl:if>
-                </xsl:for-each>
+                <xsl:call-template name="transform-children"/>
             </w:body>
         </w:document>
+    </xsl:template>
+
+    <xsl:template name="transform-children">
+        <xsl:for-each select="node()">
+            <xsl:variable name="preceding-element" select="local-name(preceding-sibling::*[position()=1])"/>
+            <!-- test if we are preceded by a block element -->
+            <xsl:if test="contains(concat(' ', $block-elements, ' '),
+                                concat(' ', $preceding-element, ' '))">
+                <xsl:if test="contains(concat(' ', $inline-elements, ' '),
+                                    concat(' ', name(), ' ')) or
+                            name()='' and normalize-space(.) != ''">
+                    <w:p>
+                        <w:pPr/>
+                        <xsl:apply-templates select="." mode="group-inline-siblings"/>
+                    </w:p>
+                </xsl:if>
+            </xsl:if>
+            <xsl:if test="contains(concat(' ', $block-elements, ' '),
+                                concat(' ', name(), ' '))">
+                <xsl:apply-templates select="." mode="block-elements"/>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <!-- template to handle nested block elements -->
@@ -223,6 +227,12 @@
 
     <xsl:template name="cell">
         <w:tc>
+            <xsl:call-template name="transform-children"/>
+        </w:tc>
+    </xsl:template>
+
+            <!--
+            XXX: We need to restore these styles
             <w:p>
                 <w:pPr>
                     <xsl:if test="name() = 'th'">
@@ -232,10 +242,9 @@
                         <w:pStyle w:val="TableContents"/>
                     </xsl:if>
                 </w:pPr>
-                <xsl:apply-templates />
             </w:p>
-        </w:tc>
-    </xsl:template>
+            <xsl:apply-templates />
+            -->
 
     <xsl:template match="img">
         <w:p>
