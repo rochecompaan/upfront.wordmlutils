@@ -168,13 +168,7 @@
     </xsl:template>
 
     <xsl:template match="table" mode="block-elements">
-        <w:p>
-            <w:pPr/>
-            <w:r>
-                <w:rPr/>
-                <w:t/>
-            </w:r>
-        </w:p>
+        <w:p/>
         <w:tbl>
             <w:tblPr>
                 <w:tblW w:w="0" w:type="auto"/>
@@ -242,11 +236,7 @@
             <!-- a singleton cell tag is not allowed so always insert an
                  empty paragraph 
             -->
-            <w:p>
-                <w:r>
-                    <w:t/>
-                </w:r>
-            </w:p>
+            <w:p/>
             <xsl:call-template name="transform-children"/>
         </w:tc>
     </xsl:template>
@@ -266,7 +256,7 @@
             <xsl:apply-templates />
             -->
 
-    <xsl:template match="ximg">
+    <xsl:template match="img">
         <w:r>
             <w:rPr/>
             <w:drawing>
@@ -288,6 +278,7 @@
                         </xsl:attribute>
                         <xsl:attribute name="id">
                             <xsl:value-of select="./@src" />
+                            <xsl:text>-$id</xsl:text>
                         </xsl:attribute>
                     </wp:docPr>
                     <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
@@ -300,6 +291,7 @@
                                 </xsl:attribute>
                                 <xsl:attribute name="id">
                                     <xsl:value-of select="./@src" />
+                                    <xsl:text>-$id</xsl:text>
                                 </xsl:attribute>
                             </pic:cNvPr>
                             <pic:cNvPicPr />
