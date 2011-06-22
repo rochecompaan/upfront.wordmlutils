@@ -236,6 +236,15 @@
             <!-- a singleton cell tag is not allowed so always insert an
                  empty paragraph if there are no child nodes.
             -->
+            <xsl:if test="./@colspan">
+                <w:tcPr>
+                    <w:gridSpan>
+                        <xsl:attribute name="w:val">
+                            <xsl:value-of select="./@colspan" />
+                        </xsl:attribute>
+                    </w:gridSpan>
+                </w:tcPr>
+            </xsl:if>
             <xsl:if test="not(node())">
                 <w:p/>
             </xsl:if>
