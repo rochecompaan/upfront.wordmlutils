@@ -71,27 +71,34 @@ def transform(basepath, htmlfile, image_resolver=None,
     zf = zipfile.ZipFile(output, 'w')
     namelist = template.namelist()
     docindex = namelist.index('word/document.xml')
+    relmap = {}
     for count, img in enumerate(images):
-        filename = 'image%s' % count
-        # insert image before document
-        namelist.insert(docindex, 'word/media/%s' % filename)
+        relid = 'image%s' % count
 
         # insert image sizes in the wordml
         img = Image.open(img)
         width, height = img.size
+        filename = relid + '.' + img.format.lower()
+
+        # insert image before document
+        filepath = 'word/media/%s' % filename
+        namelist.insert(docindex, filepath)
+        relmap[filepath] = count
 
         # convert to EMU (English Metric Unit) 
         width = convertPixelsToEMU(width)
         height = convertPixelsToEMU(height)
 
-        widthattr = '%s-$width' % filename
-        heightattr = '%s-$height' % filename
-        ridattr = '%s-$rid' % filename
+        widthattr = '%s-$width' % relid
+        heightattr = '%s-$height' % relid
+        idattr = '%s-$id' % relid
+        ridattr = '%s-$rid' % relid
         wordml = wordml.replace(widthattr, str(width))
         wordml = wordml.replace(heightattr, str(height))
-        wordml = wordml.replace(ridattr, filename)
+        wordml = wordml.replace(ridattr, relid)
+        wordml = wordml.replace(idattr, str(count))
         relxml = """<Relationship Id="%s" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/%s"/>""" % (
-            filename, filename)
+            relid, filename)
         try:
             rels.append(etree.fromstring(relxml))
         except:
@@ -103,7 +110,7 @@ def transform(basepath, htmlfile, image_resolver=None,
         if filepath == 'word/document.xml':
             zf.writestr(filepath, wordml)
         elif filepath.startswith('word/media'):
-            index = int(filepath[-1])
+            index = relmap[filepath]
             filecontent = images[index]
             filecontent.seek(0)
             zf.writestr(filepath, filecontent.read())
