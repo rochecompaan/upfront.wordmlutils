@@ -234,9 +234,11 @@
     <xsl:template name="cell">
         <w:tc>
             <!-- a singleton cell tag is not allowed so always insert an
-                 empty paragraph 
+                 empty paragraph if there are no child nodes.
             -->
-            <w:p/>
+            <xsl:if test="not(node())">
+                <w:p/>
+            </xsl:if>
             <xsl:call-template name="transform-children"/>
         </w:tc>
     </xsl:template>
