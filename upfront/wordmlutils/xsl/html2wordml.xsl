@@ -1,8 +1,8 @@
 <xsl:stylesheet version="1.0"
     xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-    <xsl:variable name="block-elements" select="'h1 h2 h3 h4 h5 h6 p div table ul ol pre img'" />
-    <xsl:variable name="inline-elements" select="'strong em span'" />
+    <xsl:variable name="block-elements" select="'h1 h2 h3 h4 h5 h6 p div table ul ol pre'" />
+    <xsl:variable name="inline-elements" select="'strong em span img'" />
 
     <xsl:template match="head|script|style"/>
 
@@ -33,9 +33,13 @@
                                 concat(' ', name(), ' '))">
                 <xsl:apply-templates select="." mode="block-elements"/>
             </xsl:if>
+
             <!-- handle text nodes except if they are inside body -->
             <xsl:if test="name() = '' and not(parent::body)">
-                <xsl:apply-templates select="."/>
+                <w:p>
+                    <w:pPr/>
+                    <xsl:apply-templates select="."/>
+                </w:p>
             </xsl:if>
             <!-- handle text nodes -->
         </xsl:for-each>
@@ -255,83 +259,76 @@
             -->
 
     <xsl:template match="img">
-        <w:p>
-            <w:pPr>
-                <w:pStyle w:val="Textbody"/>
-                <w:jc w:val="left"/>
-                <w:spacing w:after="120" w:before="0"/>
-            </w:pPr>
-            <w:r>
-                <w:rPr/>
-                <w:drawing>
-                    <wp:inline>
-                        <!-- width and height will be computed and transformed in python -->
-                        <wp:extent>
-                            <xsl:attribute name="cx">
-                                <xsl:value-of select="./@src" />
-                                <xsl:text>-$width</xsl:text>
-                            </xsl:attribute>
-                            <xsl:attribute name="cy">
-                                <xsl:value-of select="./@src" />
-                                <xsl:text>-$height</xsl:text>
-                            </xsl:attribute>
-                        </wp:extent>
-                        <wp:docPr>
-                            <xsl:attribute name="name">
-                                <xsl:value-of select="./@src" />
-                            </xsl:attribute>
-                            <xsl:attribute name="id">
-                                <xsl:value-of select="./@src" />
-                            </xsl:attribute>
-                        </wp:docPr>
-                        <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
-                        <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
-                            <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
-                            <pic:nvPicPr>
-                                <pic:cNvPr>
-                                    <xsl:attribute name="name">
+        <w:r>
+            <w:rPr/>
+            <w:drawing>
+                <wp:inline>
+                    <!-- width and height will be computed and transformed in python -->
+                    <wp:extent>
+                        <xsl:attribute name="cx">
+                            <xsl:value-of select="./@src" />
+                            <xsl:text>-$width</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="cy">
+                            <xsl:value-of select="./@src" />
+                            <xsl:text>-$height</xsl:text>
+                        </xsl:attribute>
+                    </wp:extent>
+                    <wp:docPr>
+                        <xsl:attribute name="name">
+                            <xsl:value-of select="./@src" />
+                        </xsl:attribute>
+                        <xsl:attribute name="id">
+                            <xsl:value-of select="./@src" />
+                        </xsl:attribute>
+                    </wp:docPr>
+                    <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+                    <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                        <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                        <pic:nvPicPr>
+                            <pic:cNvPr>
+                                <xsl:attribute name="name">
+                                    <xsl:value-of select="./@src" />
+                                </xsl:attribute>
+                                <xsl:attribute name="id">
+                                    <xsl:value-of select="./@src" />
+                                </xsl:attribute>
+                            </pic:cNvPr>
+                            <pic:cNvPicPr />
+                        </pic:nvPicPr>
+                        <pic:blipFill>
+                            <a:blip>
+                                <xsl:attribute name="r:embed">
+                                    <xsl:value-of select="./@src" />
+                                    <xsl:text>-$rid</xsl:text>
+                                </xsl:attribute>
+                            </a:blip>
+                            <a:stretch>
+                            <a:fillRect />
+                            </a:stretch>
+                        </pic:blipFill>
+                        <pic:spPr>
+                            <a:xfrm>
+                                <a:off x="0" y="0" />
+                                <a:ext>
+                                    <xsl:attribute name="cx">
                                         <xsl:value-of select="./@src" />
+                                        <xsl:text>-$width</xsl:text>
                                     </xsl:attribute>
-                                    <xsl:attribute name="id">
+                                    <xsl:attribute name="cy">
                                         <xsl:value-of select="./@src" />
+                                        <xsl:text>-$height</xsl:text>
                                     </xsl:attribute>
-                                </pic:cNvPr>
-                                <pic:cNvPicPr />
-                            </pic:nvPicPr>
-                            <pic:blipFill>
-                                <a:blip>
-                                    <xsl:attribute name="r:embed">
-                                        <xsl:value-of select="./@src" />
-                                        <xsl:text>-$rid</xsl:text>
-                                    </xsl:attribute>
-                                </a:blip>
-                                <a:stretch>
-                                <a:fillRect />
-                                </a:stretch>
-                            </pic:blipFill>
-                            <pic:spPr>
-                                <a:xfrm>
-                                    <a:off x="0" y="0" />
-                                    <a:ext>
-                                        <xsl:attribute name="cx">
-                                            <xsl:value-of select="./@src" />
-                                            <xsl:text>-$width</xsl:text>
-                                        </xsl:attribute>
-                                        <xsl:attribute name="cy">
-                                            <xsl:value-of select="./@src" />
-                                            <xsl:text>-$height</xsl:text>
-                                        </xsl:attribute>
-                                    </a:ext>
-                                </a:xfrm>
-                                <a:prstGeom prst="rect" />
-                            </pic:spPr>
-                            </pic:pic>
-                        </a:graphicData>
-                        </a:graphic>
-                    </wp:inline>
-                </w:drawing>
-            </w:r>
-        </w:p>
+                                </a:ext>
+                            </a:xfrm>
+                            <a:prstGeom prst="rect" />
+                        </pic:spPr>
+                        </pic:pic>
+                    </a:graphicData>
+                    </a:graphic>
+                </wp:inline>
+            </w:drawing>
+        </w:r>
     </xsl:template>
 
 </xsl:stylesheet>
