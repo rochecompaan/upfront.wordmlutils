@@ -208,9 +208,6 @@
         <xsl:param name="maxCells" select="0"/>
 
         <xsl:if test="$numColumns > 0">
-            <!--
-            <w:gridCol w:w="1200"/>
-            -->
             <w:gridCol>
                 <xsl:attribute name="w:w">
                     <xsl:value-of select="9576 div $maxCells"/>
