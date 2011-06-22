@@ -239,6 +239,14 @@
 
     <xsl:template name="cell">
         <w:tc>
+            <!-- a singleton cell tag is not allowed so always insert an
+                 empty paragraph 
+            -->
+            <w:p>
+                <w:r>
+                    <w:t/>
+                </w:r>
+            </w:p>
             <xsl:call-template name="transform-children"/>
         </w:tc>
     </xsl:template>
@@ -258,7 +266,7 @@
             <xsl:apply-templates />
             -->
 
-    <xsl:template match="img">
+    <xsl:template match="ximg">
         <w:r>
             <w:rPr/>
             <w:drawing>
