@@ -1,5 +1,6 @@
 <xsl:stylesheet version="1.0"
-    xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:upy="http://upfrontsystems.co.za/wordmlutils">
 
     <xsl:variable name="block-elements" select="'h1 h2 h3 h4 h5 h6 p div table ul ol pre'" />
     <xsl:variable name="inline-elements" select="'strong em span img'" />
@@ -195,7 +196,7 @@
                     </xsl:for-each>
                 </xsl:variable>
                 <xsl:call-template name="gridColumns">
-                    <xsl:with-param name="numColumns" select="$maxCells"/>
+                    <xsl:with-param name="numColumns" select="$maxCells - 0"/>
                     <xsl:with-param name="maxCells" select="$maxCells"/>
                 </xsl:call-template>
             </w:tblGrid>
@@ -212,7 +213,7 @@
         <xsl:if test="$numColumns > 0">
             <w:gridCol>
                 <xsl:attribute name="w:w">
-                    <xsl:value-of select="9576 div $maxCells"/>
+                    <xsl:value-of select="upy:colwidth($numColumns)"/>
                 </xsl:attribute>
             </w:gridCol>
 

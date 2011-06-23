@@ -12,6 +12,13 @@ from PIL import Image
 
 dirname = os.path.dirname(__file__)
 
+leftmargin = 1440 # 1 inch
+righmarg = 1440 # 1 inch
+# 8.5 inches = 12240 twips
+# default left and right margin is 1 inch each
+# pagewidth is 6.5 inches = 9360 twips
+pagewidth = 9360
+
 def get_images(basepath, doc):
     images = []
     for img in doc.xpath('//img'):
@@ -30,6 +37,51 @@ def convertPixelsToEMU(px):
     emu = inches * 914400
     return int(emu)
 
+def normalize_width(width):
+    if width.endswith('%'):
+        percentage = int(width[:-1])/100.0
+        return int(pagewidth * percentage)
+    elif width.endswidth('px'):
+        pixels = int(width[:-2])
+        inches = pixels/72.0
+        return inches * 1440
+    else:
+        raise RuntimeErorr('Unit not known: %s' % width)
+
+def columnwidth(context, colindex):
+    """ calculate the width of a column
+    """
+    table = context.context_node
+    colindex = int(colindex) - 1
+    # get the max number of columns
+    maxcolumns = 0
+    widthspec = {}
+
+    # compute column widths. iterate in reverse to ensure the top most
+    # width spec wins
+    rows = table.xpath('*/tr')
+    rows.reverse()
+    for tr in rows:
+        colcount = len(tr.getchildren())
+        if colcount > maxcolumns:
+            maxcolumns = colcount
+        for index, col in enumerate(tr.getchildren()):
+            if col.get('width'):
+                widthspec[index] = normalize_width(col.get('width'))
+
+    # calculate widths for columns than don't have width specified
+    if len(widthspec) < maxcolumns:
+        divisor = maxcolumns - len(widthspec) 
+        spaceleft = pagewidth
+        for width in widthspec.values():
+            spaceleft = spaceleft - width
+        width = spaceleft / divisor
+        for i in range(maxcolumns):
+            if not widthspec.has_key(i):
+                widthspec[i] = width
+
+    return widthspec[colindex]
+
 def transform(basepath, htmlfile, image_resolver=None,
         create_package=True, outfile=sys.stdout):
 
@@ -39,6 +91,10 @@ def transform(basepath, htmlfile, image_resolver=None,
         get_images method accepting `basepath` and `doc` as args. it should
         return images in the same format as the get_images method above.
     """
+    # register columnwidth extension
+    ns = etree.FunctionNamespace('http://upfrontsystems.co.za/wordmlutils')
+    ns.prefix = 'upy'
+    ns['colwidth'] = columnwidth
 
     xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
 
