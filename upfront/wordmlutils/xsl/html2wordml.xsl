@@ -173,14 +173,16 @@
             <w:tblPr>
                 <w:tblW w:w="0" w:type="auto"/>
                 <!-- we include borders by default -->
-                <w:tblBorders>
-                    <w:top w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                    <w:left w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                    <w:bottom w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                    <w:right w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                    <w:insideH w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                    <w:insideV w:color="auto" w:space="0" w:sz="2" w:val="single"/>
-                </w:tblBorders>
+                <xsl:if test="not(./@border = 0)">
+                    <w:tblBorders>
+                        <w:top w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                        <w:left w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                        <w:bottom w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                        <w:right w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                        <w:insideH w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                        <w:insideV w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+                    </w:tblBorders>
+                </xsl:if>
                 <w:jc w:val="left"/>
             </w:tblPr>
             <w:tblGrid>
