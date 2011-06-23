@@ -52,14 +52,14 @@ def columnwidth(context, colindex):
     """ calculate the width of a column
     """
     table = context.context_node
-    colindex = int(colindex) - 1
+    colindex = int(colindex)
     # get the max number of columns
     maxcolumns = 0
     widthspec = {}
 
     # compute column widths. iterate in reverse to ensure the top most
     # width spec wins
-    rows = table.xpath('*/tr')
+    rows = table.xpath('thead/tr|tbody/tr|tr')
     rows.reverse()
     for tr in rows:
         colcount = len(tr.getchildren())
@@ -80,7 +80,7 @@ def columnwidth(context, colindex):
             if not widthspec.has_key(i):
                 widthspec[i] = width
 
-    return widthspec[colindex]
+    return widthspec.get(colindex, pagewidth)
 
 def transform(basepath, htmlfile, image_resolver=None,
         create_package=True, outfile=sys.stdout):

@@ -198,6 +198,7 @@
                 <xsl:call-template name="gridColumns">
                     <xsl:with-param name="numColumns" select="$maxCells - 0"/>
                     <xsl:with-param name="maxCells" select="$maxCells"/>
+                    <xsl:with-param name="columnIndex" select="0"/>
                 </xsl:call-template>
             </w:tblGrid>
             <xsl:for-each select="tr|tbody/tr|thead/tr">
@@ -209,17 +210,19 @@
     <xsl:template name="gridColumns">
         <xsl:param name="numColumns" select="0"/>
         <xsl:param name="maxCells" select="0"/>
+        <xsl:param name="columnIndex" select="0"/>
 
         <xsl:if test="$numColumns > 0">
             <w:gridCol>
                 <xsl:attribute name="w:w">
-                    <xsl:value-of select="upy:colwidth($numColumns)"/>
+                    <xsl:value-of select="upy:colwidth($columnIndex)"/>
                 </xsl:attribute>
             </w:gridCol>
 
             <xsl:call-template name="gridColumns">
                 <xsl:with-param name="numColumns" select="$numColumns -1"/>
                 <xsl:with-param name="maxCells" select="$maxCells"/>
+                <xsl:with-param name="columnIndex" select="$columnIndex +1"/>
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
