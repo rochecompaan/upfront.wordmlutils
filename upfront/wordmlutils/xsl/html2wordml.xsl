@@ -18,6 +18,16 @@
     <xsl:template name="transform-children">
         <xsl:for-each select="node()">
             <xsl:variable name="preceding-element" select="local-name(preceding-sibling::*[position()=1])"/>
+            <!-- test for any inline element that is the first child -->
+            <xsl:if test="position()=1">
+                <xsl:if test="contains(concat(' ', $inline-elements, ' '),
+                                       concat(' ', name(), ' ')) or name()=''">
+                    <w:p>
+                        <w:pPr/>
+                        <xsl:apply-templates select="." mode="group-inline-siblings"/>
+                    </w:p>
+                </xsl:if>
+            </xsl:if>
             <!-- test if we are preceded by a block element -->
             <xsl:if test="contains(concat(' ', $block-elements, ' '),
                                 concat(' ', $preceding-element, ' '))">
@@ -36,7 +46,7 @@
             </xsl:if>
 
             <!-- handle text nodes except if they are inside body -->
-            <xsl:if test="name() = '' and not(parent::body)">
+            <xsl:if test="name() = '' and not(parent::body) and not(position()=1)">
                 <w:p>
                     <w:pPr/>
                     <xsl:apply-templates select="."/>
@@ -92,6 +102,8 @@
                 <w:rPr>
                     <xsl:apply-templates select="ancestor::em|ancestor::strong|ancestor::pre|ancestor::div[@class='pullquote']" mode="ancestor_properties"/>
                 </w:rPr>
+                <!-- add a space following text run to ensure siblіng
+                     text runs are separated by a space -->
                 <w:t><xsl:value-of select="."/><xsl:text> </xsl:text></w:t>
             </w:r>
         </xsl:if>
