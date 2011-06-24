@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<w:document xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:upy="http://upfrontsystems.co.za/wordmlutils">
+  <w:body>
+    <w:p/>
+    <w:tbl>
+      <w:tblPr>
+        <w:tblW w:w="0" w:type="auto"/>
+        <w:tblBorders>
+          <w:top w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+          <w:left w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+          <w:bottom w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+          <w:right w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+          <w:insideH w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+          <w:insideV w:color="auto" w:space="0" w:sz="2" w:val="single"/>
+        </w:tblBorders>
+        <w:jc w:val="left"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="9360"/>
+      </w:tblGrid>
+      <w:tr>
+        <w:trPr>
+          <w:cantSplit w:val="false"/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:type="dxa" w:w="9360"/>
+          </w:tcPr>
+          <w:p>
+            <w:pPr/>
+            <w:r>
+                <w:rPr>
+                    <w:b/>
+                </w:rPr>
+                <w:t>strong</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+  </w:body>
+</w:document>
+
