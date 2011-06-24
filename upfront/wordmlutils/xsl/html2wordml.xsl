@@ -215,7 +215,7 @@
         <xsl:if test="$numColumns > 0">
             <w:gridCol>
                 <xsl:attribute name="w:w">
-                    <xsl:value-of select="upy:colwidth($columnIndex)"/>
+                    <xsl:value-of select="upy:gridcolwidth($columnIndex)"/>
                 </xsl:attribute>
             </w:gridCol>
 
@@ -249,15 +249,20 @@
             <!-- a singleton cell tag is not allowed so always insert an
                  empty paragraph if there are no child nodes.
             -->
-            <xsl:if test="./@colspan">
-                <w:tcPr>
+            <w:tcPr>
+                <w:tcW w:type="dxa">
+                    <xsl:attribute name="w:w">
+                        <xsl:value-of select="upy:tcwidth(./@colspan)" />
+                    </xsl:attribute>
+                </w:tcW>
+                <xsl:if test="./@colspan">
                     <w:gridSpan>
                         <xsl:attribute name="w:val">
                             <xsl:value-of select="./@colspan" />
                         </xsl:attribute>
                     </w:gridSpan>
-                </w:tcPr>
-            </xsl:if>
+                </xsl:if>
+            </w:tcPr>
             <xsl:if test="not(node())">
                 <w:p/>
             </xsl:if>

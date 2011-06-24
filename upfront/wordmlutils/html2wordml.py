@@ -48,11 +48,7 @@ def normalize_width(width):
     else:
         raise RuntimeErorr('Unit not known: %s' % width)
 
-def columnwidth(context, colindex):
-    """ calculate the width of a column
-    """
-    table = context.context_node
-    colindex = int(colindex)
+def tablewidthspec(table):
     # get the max number of columns
     maxcolumns = 0
     widthspec = {}
@@ -80,7 +76,39 @@ def columnwidth(context, colindex):
             if not widthspec.has_key(i):
                 widthspec[i] = width
 
+    return widthspec
+
+def gridcolwidth(context, colindex):
+    """ calculate the width of a column
+    """
+    table = context.context_node
+    colindex = int(colindex)
+    widthspec = tablewidthspec(table)
+
     return widthspec.get(colindex, pagewidth)
+
+def tcwidth(context, colspan):
+    """ calculate the width of a column
+    """
+    td = context.context_node
+    table = td.xpath('ancestor::table')[0]
+    colindex = td.getparent().getchildren().index(td)
+    if colspan:
+        colspan = int(colspan[0])
+    else:
+        colspan = 1
+    widthspec = tablewidthspec(table)
+
+    # make list of column widths in column order
+    wlist = []
+    for i in range(len(widthspec)):
+        wlist.append(widthspec.get(i))
+
+    columnwidth = 0
+    for w in wlist[colindex:colindex+colspan]:
+        columnwidth += w
+
+    return columnwidth
 
 def transform(basepath, htmlfile, image_resolver=None,
         create_package=True, outfile=sys.stdout):
@@ -94,7 +122,8 @@ def transform(basepath, htmlfile, image_resolver=None,
     # register columnwidth extension
     ns = etree.FunctionNamespace('http://upfrontsystems.co.za/wordmlutils')
     ns.prefix = 'upy'
-    ns['colwidth'] = columnwidth
+    ns['gridcolwidth'] = gridcolwidth
+    ns['tcwidth'] = tcwidth
 
     xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
 
