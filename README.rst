@@ -53,7 +53,7 @@ From Python
     </html>"""
     >>> basepath = '/'
     >>> output = StringIO()
-    >>> output = transform(basepath, html, outfile=output)
+    >>> transform(basepath, html, outfile=output)
     >>> docxfile = output.getvalue()
 
 The transform method above also takes an optional ``image_resolver``
