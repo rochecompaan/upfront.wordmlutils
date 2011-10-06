@@ -110,6 +110,16 @@ def tcwidth(context, colspan):
 
     return columnwidth
 
+def imgsize(context, size, dimension):
+    """ convert the size
+    """
+    if size and size[0].endswith('px'):
+        size = size[0][:-2]
+        return convertPixelsToEMU(int(size))
+    else:
+        return '%s-$%s' % (context.context_node.get('src'), dimension)
+
+
 def transform(basepath, htmlfile, image_resolver=None,
         create_package=True, outfile=sys.stdout):
 
@@ -124,6 +134,7 @@ def transform(basepath, htmlfile, image_resolver=None,
     ns.prefix = 'upy'
     ns['gridcolwidth'] = gridcolwidth
     ns['tcwidth'] = tcwidth
+    ns['imgsize'] = imgsize
 
     xslfile = open(os.path.join(dirname, 'xsl/html2wordml.xsl'))
 

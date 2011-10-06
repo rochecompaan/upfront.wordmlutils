@@ -305,12 +305,10 @@
                     <!-- width and height will be computed and transformed in python -->
                     <wp:extent>
                         <xsl:attribute name="cx">
-                            <xsl:value-of select="./@src" />
-                            <xsl:text>-$width</xsl:text>
+                            <xsl:value-of select="upy:imgsize(./@width, 'width')"/>
                         </xsl:attribute>
                         <xsl:attribute name="cy">
-                            <xsl:value-of select="./@src" />
-                            <xsl:text>-$height</xsl:text>
+                            <xsl:value-of select="upy:imgsize(./@height, 'height')"/>
                         </xsl:attribute>
                     </wp:extent>
                     <wp:docPr>
@@ -353,12 +351,10 @@
                                 <a:off x="0" y="0" />
                                 <a:ext>
                                     <xsl:attribute name="cx">
-                                        <xsl:value-of select="./@src" />
-                                        <xsl:text>-$width</xsl:text>
+                                        <xsl:value-of select="upy:imgsize(./@width, 'width')"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="cy">
-                                        <xsl:value-of select="./@src" />
-                                        <xsl:text>-$height</xsl:text>
+                                        <xsl:value-of select="upy:imgsize(./@height, 'height')"/>
                                     </xsl:attribute>
                                 </a:ext>
                             </a:xfrm>
