@@ -113,11 +113,17 @@ def tcwidth(context, colspan):
 def imgsize(context, size, dimension):
     """ convert the size
     """
-    if size and size[0].endswith('px'):
-        size = size[0][:-2]
-        return convertPixelsToEMU(int(size))
-    else:
-        return '%s-$%s' % (context.context_node.get('src'), dimension)
+    if size:
+        size = size[0]
+        if size.endswith('px'):
+            size = size[:-2]
+        try:
+            size = int(size)
+            return convertPixelsToEMU(int(size))
+        except ValueError:
+            pass
+
+    return '%s-$%s' % (context.context_node.get('src'), dimension)
 
 
 def transform(basepath, htmlfile, image_resolver=None,
