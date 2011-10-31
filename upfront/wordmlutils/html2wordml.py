@@ -174,11 +174,18 @@ def transform(basepath, htmlfile, image_resolver=None,
     namelist = template.namelist()
     docindex = namelist.index('word/document.xml')
     relmap = {}
+    notfoundfile = open(os.path.join(dirname, 'cross.png'))
+    notfound = StringIO(notfoundfile.read())
+    notfoundfile.close()
     for count, img in enumerate(images):
         relid = 'image%s' % count
 
         # insert image sizes in the wordml
-        img = Image.open(img)
+        try:
+            img = Image.open(img)
+        except:
+            notfound.seek(0)
+            img = Image.open(notfound)
         width, height = img.size
         filename = relid + '.' + img.format.lower()
 
